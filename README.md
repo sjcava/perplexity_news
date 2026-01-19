@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portal de Noticias - Perplexity AI
 
-## Getting Started
+Web app que busca y resume noticias usando Perplexity AI y n8n.
 
-First, run the development server:
+## Caracteristicas
+
+- 6 categorias predefinidas (Venezuela, Economia, Politica, Tecnologia, Deportes, Internacional)
+- Busqueda personalizada de cualquier tema
+- Historial de busquedas (localStorage)
+- Diseno responsive con soporte para dark mode
+- Fuentes/citas de Perplexity AI
+
+## Stack
+
+- **Frontend**: Next.js 16 + TypeScript + Tailwind CSS
+- **Backend**: n8n workflow con webhook
+- **AI**: Perplexity API (modelo sonar)
+
+## Configuracion
+
+### 1. Variables de entorno
+
+Crea un archivo `.env.local`:
+
+```env
+N8N_WEBHOOK_URL=https://tu-instancia.app.n8n.cloud/webhook/perplexity-news
+```
+
+### 2. Instalar dependencias
+
+```bash
+npm install
+```
+
+### 3. Ejecutar en desarrollo
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 4. Build para produccion
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Flujo n8n
 
-## Learn More
+El flujo `Perplexity_news_API` debe estar activo en tu instancia de n8n. Recibe:
 
-To learn more about Next.js, take a look at the following resources:
+```json
+{
+  "topic": "string"
+}
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Y retorna:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```json
+{
+  "success": true,
+  "data": {
+    "topic": "...",
+    "content": "...",
+    "sources": [...],
+    "date": "..."
+  },
+  "error": null
+}
+```
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Deploy automatico en Vercel conectando este repositorio.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+No olvides configurar la variable de entorno `N8N_WEBHOOK_URL` en Vercel.
